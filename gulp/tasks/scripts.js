@@ -2,7 +2,7 @@
 
 var path = require('path');
 var gulp = require('gulp');
-var conf = require('./conf');
+var conf = require('../config');
 
 var browserSync = require('browser-sync');
 var webpack = require('webpack-stream');
@@ -51,6 +51,11 @@ function webpackWrapper(watch, test, callback) {
     .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app')));
 }
 
+
+
+
+
+
 gulp.task('scripts', function () {
   return webpackWrapper(false, false);
 });
@@ -66,3 +71,15 @@ gulp.task('scripts:test', function () {
 gulp.task('scripts:test-watch', ['scripts'], function (callback) {
   return webpackWrapper(true, true, callback);
 });
+
+
+
+gulp.task('transpile', function () {
+  return gulp.src('src/app.js')
+    .pipe(babel({
+      presets: ['es2015']
+    }));
+    //.pipe(gulp.dest('dist'));
+});
+
+
