@@ -7,7 +7,7 @@ var conf = require('../config');
 var karma = require('karma');
 
 var pathSrcHtml = [
-  path.join(conf.paths.src, '/**/*.html')
+  path.join(conf.paths.app, '/**/*.html')
 ];
 
 var pathSrcJs = [
