@@ -21,3 +21,8 @@ export default wrench.readdirSyncRecursive(path.join(__dirname, 'tasks'))
         require('./tasks/' + file);
     });
 
+
+// after all tasks have been loaded
+// register their possible targets
+registerAllTargets();
+

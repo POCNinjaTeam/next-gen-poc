@@ -1,54 +1,141 @@
 'use strict';
 
-var path = require('path');
-var gulp = require('gulp');
-var conf = require('../config');
+//import {path} from 'path';
+import {config, paths} from '../config';
+import {registerMultiTask} from '../utils/register-tasks';
 
-var browserSync = require('browser-sync');
-var webpack = require('webpack-stream');
-
-var $ = require('gulp-load-plugins')();
+import gutil from 'gulp-util';
+import Q from 'q';
 
 
-function webpackWrapper(watch, test, callback) {
-  var webpackOptions = {
-    watch: watch,
-    module: {
-      preLoaders: [{ test: /\.js$/, exclude: /node_modules/, loader: 'eslint-loader'}],
-      loaders: [{ test: /\.js$/, exclude: /node_modules/, loaders: ['ng-annotate', 'babel-loader']}]
-    },
-    output: { filename: 'index.module.js' }
-  };
+var //path = require('path'),
+    gulp = require('gulp'),
 
-  if(watch) {
-    webpackOptions.devtool = 'inline-source-map';
-  }
+    babel = require('gulp-babel'),
+    lazypipe = require('lazypipe'),
+    concat = require('gulp-concat'),
+    sourcemaps = require('gulp-sourcemaps');
 
-  var webpackChangeHandler = function(err, stats) {
-    if(err) {
-      conf.errorHandler('Webpack')(err);
+
+
+export var tasks = {
+    transpile: lazypipe()
+        .pipe(babel, {
+            presets: ['es2015']
+        }),
+    
+    concat: lazypipe()
+        //.pipe()
+};
+
+
+//gulp.task('transpile', registerTasks);
+
+
+/*gulp.task('transpile', () => {
+    // shape the array to have a promise for each target
+    // and resolve Q.all after every target's been resolved
+    return Q.all(Object.keys(config.scripts)
+        .filter((targetName) => {
+            let target = config.scripts[targetName];
+            return (target.src && target.src.length > 0);
+        })
+        .map((targetName) => {
+            let target = config.scripts[targetName],
+                deferred = Q.defer();
+            
+            setTimeout(function() {
+                gutil.log('Starting target', gutil.colors.cyan(targetName));
+
+                gulp.src(target.src, {cwd: target.cwd || null})
+                    .pipe(tasks.transpile())
+                    .pipe(sourcemaps.write('.'))
+                    .pipe(gulp.dest(paths.tmp))
+                    .on('finish', () => {
+                        gutil.log('Finished target', gutil.colors.cyan(targetName));
+                        deferred.resolve();
+                    });
+            }, 0);
+            
+            return deferred.promise;
+        }));
+});*/
+
+
+/*gulp.task('concat', ['transpile'], () => {
+    return gulp.src(config.scripts.src)
+        .pipe(tasks.concat())
+        .pipe(sourcemaps.write('.'));
+});*/
+
+
+
+
+gulp.task('scripts', () => {
+    return gulp.src('./**/*.js')
+        .src('./**/*.js')
+        .pipe(tasks.transpile())
+        .pipe(sourcemaps.write('.'));
+});
+
+
+
+
+
+
+
+
+
+
+/*function webpackWrapper(watch, test, callback) {
+    var webpackOptions = {
+        watch: watch,
+        module: {
+            preLoaders: [{
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'eslint-loader'
+            }],
+            loaders: [{
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loaders: ['ng-annotate', 'babel-loader']
+            }]
+        },
+        output: {
+            filename: 'index.module.js'
+        }
+    };
+
+    if (watch) {
+        webpackOptions.devtool = 'inline-source-map';
     }
-    $.util.log(stats.toString({
-      colors: $.util.colors.supportsColor,
-      chunks: false,
-      hash: false,
-      version: false
-    }));
-    browserSync.reload();
-    if(watch) {
-      watch = false;
-      callback();
+
+    var webpackChangeHandler = function (err, stats) {
+        if (err) {
+            conf.errorHandler('Webpack')(err);
+        }
+        $.util.log(stats.toString({
+            colors: $.util.colors.supportsColor,
+            chunks: false,
+            hash: false,
+            version: false
+        }));
+        browserSync.reload();
+        if (watch) {
+            watch = false;
+            callback();
+        }
+    };
+
+    var sources = [path.join(conf.paths.src, '/app/index.module.js')];
+    if (test) {
+        sources.push(path.join(conf.paths.src, '/app/** /*.spec.js'));
     }
-  };
 
-  var sources = [ path.join(conf.paths.src, '/app/index.module.js') ];
-  if (test) {
-    sources.push(path.join(conf.paths.src, '/app/**/*.spec.js'));
-  }
-
-  return gulp.src(sources)
-    .pipe(webpack(webpackOptions, null, webpackChangeHandler))
-    .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app')));
+    return gulp.src(sources)
+        .pipe(webpack(webpackOptions, null, webpackChangeHandler))
+        .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app')));
 }
 
 
@@ -57,29 +144,19 @@ function webpackWrapper(watch, test, callback) {
 
 
 gulp.task('scripts', function () {
-  return webpackWrapper(false, false);
+    return webpackWrapper(false, false);
 });
 
 gulp.task('scripts:watch', ['scripts'], function (callback) {
-  return webpackWrapper(true, false, callback);
+    return webpackWrapper(true, false, callback);
 });
 
 gulp.task('scripts:test', function () {
-  return webpackWrapper(false, true);
+    return webpackWrapper(false, true);
 });
 
 gulp.task('scripts:test-watch', ['scripts'], function (callback) {
-  return webpackWrapper(true, true, callback);
+    return webpackWrapper(true, true, callback);
 });
 
-
-
-gulp.task('transpile', function () {
-  return gulp.src('src/app.js')
-    .pipe(babel({
-      presets: ['es2015']
-    }));
-    //.pipe(gulp.dest('dist'));
-});
-
-
+*/
