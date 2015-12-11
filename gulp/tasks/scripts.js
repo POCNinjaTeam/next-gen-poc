@@ -71,12 +71,13 @@ export var tasks = {
 
 
 
-gulp.task('scripts', () => {
-    return gulp.src('./**/*.js')
-        .src('./**/*.js')
+gulp.task('scripts', registerMultiTask((cb, taskConfig) => {
+    //console.log(cb, taskConfig);
+    return gulp.src(taskConfig.src)
         .pipe(tasks.transpile())
-        .pipe(sourcemaps.write('.'));
-});
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(paths.tmp))
+}));
 
 
 
