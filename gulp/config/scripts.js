@@ -18,14 +18,14 @@ const base = {
             ]
         },
 
-        server: {
+        /*server: {
             //cwd: paths.app,
             src: [
                 '** /*.js',
                 '!bower_components/moment/**',
                 '!node_modules/**',
             ]
-        }
+        }*/
     }
 };
 
