@@ -1,7 +1,7 @@
 'use strict';
 
 //import {path} from 'path';
-import {config, paths} from '../config';
+import {config as globalConfig, paths} from '../config';
 import {registerMultiTask} from '../utils/register-tasks';
 
 import gutil from 'gulp-util';
@@ -35,13 +35,13 @@ export var tasks = {
 /*gulp.task('transpile', () => {
     // shape the array to have a promise for each target
     // and resolve Q.all after every target's been resolved
-    return Q.all(Object.keys(config.scripts)
+    return Q.all(Object.keys(globalConfig.scripts)
         .filter((targetName) => {
-            let target = config.scripts[targetName];
+            let target = globalConfig.scripts[targetName];
             return (target.src && target.src.length > 0);
         })
         .map((targetName) => {
-            let target = config.scripts[targetName],
+            let target = globalConfig.scripts[targetName],
                 deferred = Q.defer();
             
             setTimeout(function() {
@@ -63,7 +63,7 @@ export var tasks = {
 
 
 /*gulp.task('concat', ['transpile'], () => {
-    return gulp.src(config.scripts.src)
+    return gulp.src(globalConfig.scripts.src)
         .pipe(tasks.concat())
         .pipe(sourcemaps.write('.'));
 });*/
@@ -71,17 +71,31 @@ export var tasks = {
 
 
 
-gulp.task('scripts', registerMultiTask((cb, taskConfig) => {
-    //console.log(cb, taskConfig);
-    return gulp.src(taskConfig.src)
+gulp.task('scripts', (task, done) => {
+    console.log('task.config.dest', task.config.dest);
+    return gulp.src(task.config.src, {cwd: task.config.cwd})
         .pipe(tasks.transpile())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.tmp))
 }));
 
+/*import Q from 'q';
 
+gulp.task('scripts', (task, done) => {
+    var deferred = Q.defer();
 
+    setTimeout(() => {
 
+        gulp.src(task.config.src)
+            .pipe(tasks.transpile())
+            .pipe(sourcemaps.write('.'))
+            .pipe(gulp.dest(paths.tmp));
+
+        deferred.resolve();
+    }, Math.floor(Math.random() * (5000 - 2000)) + 2000);
+
+    return deferred.promise; 
+});*/
 
 
 

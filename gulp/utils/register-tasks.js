@@ -9,12 +9,21 @@ import {config, paths} from '../config';
 
 
 
+function multiTargetTask(taskTargetName, taskFunction) {
+    // get the current running task obj
+    var task = gulp.tasks[taskTargetName]
+    return (done) => {
+        var stream = gulp.src(task.config.src, {cwd: task.config.cwd});
+        return taskFunction.apply(gulp, [task, stream, done])
+    };
+}
+
 
 export function registerAllTargets () {
     return Object.keys(gulp.tasks)
         .forEach((key) => {
             var task = gulp.tasks[key],
-                taskConfig = config[task.name] || {};
+                taskConfig = config[task.name] || {config:{}};
             
             let targets = Object.keys(taskConfig)
                 .map((target) => {
@@ -22,38 +31,24 @@ export function registerAllTargets () {
                     
                     gulp.task(taskTargetName, task.fn);
                     // add some custom values to gulp.tasks
-                    gulp.tasks[taskTargetName].target = {
+                    gulp.tasks[taskTargetName].config = taskConfig[target] || {};
+                    /*gulp.tasks[taskTargetName].target = {
                         parentTask: task,
                         name: target,
-                        config: taskConfig[target] || {},
-                    };
-                    //console.log('task', gulp.tasks[taskTargetName]);
+                    };*/
+                    gulp.tasks[taskTargetName].fn =
+                        multiTargetTask(taskTargetName, task.fn);
                     
                     return taskTargetName;
                 });
             
-            gulp.task(task.name, () => {
-                return runSequence(targets);
-            });
+            gulp.task(task.name, () => runSequence(targets));
+        
         });
 }
 
 
 
-export function registerMultiTask(taskFunction) {
-    //console.log('module.parent.filename', module.parent.filename);
-    return function(gulpCb) {
-        //console.log('gulp.tasks', gulp.tasks);
-        
-        // find the running task and get its obj
-        var task = Object.keys(gulp.tasks)
-            .filter((name) => gulp.tasks[name].running)
-            .map((name) => gulp.tasks[name])[0];
-        
-        //console.log('task', task);
-        return taskFunction.apply(this, [gulpCb, task.target.config]);
-    }
-}
 
     
 /*
