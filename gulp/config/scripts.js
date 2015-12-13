@@ -1,5 +1,6 @@
 'use strict';
 
+import path from 'path';
 import merge from 'merge';
 import {paths, config} from './index';
 
@@ -15,7 +16,8 @@ const base = {
                 '!**/*.spec.js',
                 '!bower_components/**',
                 '!node_modules/**',
-            ]
+            ],
+            dest: path.join(paths.tmp, paths.app),
         },
 
         /*server: {
@@ -30,6 +32,7 @@ const base = {
 };
 
 config.scripts = base.scripts;
+    
 
 
 export const production = {};

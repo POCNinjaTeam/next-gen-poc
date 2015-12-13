@@ -76,8 +76,9 @@ gulp.task('scripts', (task, done) => {
     return gulp.src(task.config.src, {cwd: task.config.cwd})
         .pipe(tasks.transpile())
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(paths.tmp))
-}));
+        .pipe(gulp.dest(task.config.dest));
+});
+
 
 /*import Q from 'q';
 
