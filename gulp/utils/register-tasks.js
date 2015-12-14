@@ -13,8 +13,8 @@ function multiTargetTask(taskTargetName, taskFunction) {
     // get the current running task obj
     var task = gulp.tasks[taskTargetName]
     return (done) => {
-        var stream = gulp.src(task.config.src, {cwd: task.config.cwd});
-        return taskFunction.apply(gulp, [task, stream, done])
+        //var stream = gulp.src(task.config.src, {cwd: task.config.cwd});
+        return taskFunction.apply(gulp, [task, done])
     };
 }
 
