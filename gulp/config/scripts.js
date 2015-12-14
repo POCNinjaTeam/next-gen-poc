@@ -20,14 +20,13 @@ const base = {
             dest: path.join(paths.tmp, paths.app),
         },
 
-        /*server: {
-            //cwd: paths.app,
+        server: {
+            cwd: paths.server,
             src: [
-                '** /*.js',
-                '!bower_components/moment/**',
-                '!node_modules/**',
-            ]
-        }*/
+                '**/*.js',
+            ],
+            dest: path.join(paths.tmp, paths.server),
+        }
     }
 };
 

@@ -1,5 +1,35 @@
 'use strict';
 
+
+import gulp from 'gulp';
+import connect from 'gulp-connect';
+
+/*gulp.task('serve', ['watch'], function () {
+    browserSyncInit([path.join(conf.paths.tmp, '/serve'), conf.paths.src]);
+});*/
+
+
+
+gulp.task('connect', ['scripts'], (task) => {
+    return connect.server({
+        root: task.config.root || '',
+        port: task.config.port || 3000,
+        host: task.config.host,
+        // FIXME: there appears to be a bug with gulp-connect where
+        // passing `options.https: false` turns it on
+        https: task.config.https,
+        livereload: task.config.livereload || true,
+        fallback: task.config.fallback,
+        middleware: task.config.middleware,
+    });
+});
+
+
+gulp.task('serve', ['scripts', 'connect:express']);
+
+
+
+/*
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('../config');
@@ -32,7 +62,7 @@ function browserSyncInit(baseDir, browser) {
    * Example: $http.get('/users') requests will be automatically proxified.
    *
    * For more details and option, https://github.com/chimurai/http-proxy-middleware/blob/v0.9.0/README.md
-   */
+   * /
   // server.middleware = proxyMiddleware('/users', {target: 'http://jsonplaceholder.typicode.com', changeOrigin: true});
 
   browserSync.instance = browserSync.init({
@@ -66,3 +96,4 @@ gulp.task('serve:e2e', ['inject'], function () {
 gulp.task('serve:e2e-dist', ['build'], function () {
   browserSyncInit(conf.paths.dist, []);
 });
+*/
