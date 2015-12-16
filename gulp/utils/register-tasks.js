@@ -32,21 +32,23 @@ export function registerAllTargets () {
                 gulp.task(taskTargetName, (targetConfig.dep || task.dep), task.fn);
                 // add some custom values to gulp.tasks
                 gulp.tasks[taskTargetName].config = targetConfig;
-                /*gulp.tasks[taskTargetName].target = {
+                gulp.tasks[taskTargetName].context = {};
+                gulp.tasks[taskTargetName].target = {
                     parentTask: task,
                     name: target,
-                };*/
+                };
                 gulp.tasks[taskTargetName].fn =
                     multiTargetTask(taskTargetName, task.fn);
 
                 return taskTargetName;
             });
 
-        // FIXME: runSequence causes the target containing task to finish before
-        // all targets are done; this causes other tasks that use the task below
-        // as a dependency to run before all targets are completed
-        gulp.task(task.name, (taskConfig.dep || task.dep), () => runSequence(targets));
-
+        if (targets.length) {
+            // FIXME: runSequence causes the target containing task to finish before
+            // all targets are done; this causes other tasks that use the task below
+            // as a dependency to run before all targets are completed
+            gulp.task(task.name, (taskConfig.dep || task.dep), () => runSequence(targets));
+        }
     });
 }
 
