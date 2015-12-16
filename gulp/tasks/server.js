@@ -1,8 +1,12 @@
 'use strict';
 
 
+import {spawn} from 'child_process';
+
 import gulp from 'gulp';
 import connect from 'gulp-connect';
+
+import browserSync from 'browser-sync';
 
 /*gulp.task('serve', ['watch'], function () {
     browserSyncInit([path.join(conf.paths.tmp, '/serve'), conf.paths.src]);
@@ -10,8 +14,8 @@ import connect from 'gulp-connect';
 
 
 
-gulp.task('connect', ['scripts'], (task) => {
-    return connect.server({
+gulp.task('server', (task, done) => {
+    /*connect.server({
         root: task.config.root || '',
         port: task.config.port || 3000,
         host: task.config.host,
@@ -22,10 +26,76 @@ gulp.task('connect', ['scripts'], (task) => {
         fallback: task.config.fallback,
         middleware: task.config.middleware,
     });
+    
+    // make sure to run done to end the task
+    done();*/
+    
+    var browser = browserSync.create(task.name);
+    
+    browserSync.init({
+        proxy: 'localhost:8080'
+        
+        //server: "./tmp/src/server",
+        //files: ["*.html", "*.js"]
+    });
 });
 
+gulp.task('browser-reload', () => browserSync.reload());
 
-gulp.task('serve', ['scripts', 'connect:express']);
+
+gulp.task('serve', ['scripts', 'server:express', 'watch']);
+
+
+
+/*gulp.task('node-server', (task, done) => {
+    var child = task.context.child,
+        target = task.target;
+    
+    switch (target.name) {
+        case 'restart':
+        case 'start':
+            return startChild();
+        case 'stop':
+            return stopChild();
+        default:
+            if (task.config.execute) {
+                return task.config.execute.apply(this, task.config.executeArgs || []);
+            }
+            break;
+    }
+
+    function stopChild() {
+        if (!child) {
+            return false;
+        }
+        
+        console.log('Killing spawned process');
+        return child.kill();
+    }
+    
+    function startChild() {
+        stopChild();
+        console.log('Starting new spawned process');
+        
+        if (task.config.app) {
+            child = spawn(task.config.node || 'node',
+                [].concat(task.config.app, task.config || []),
+                task.config.opts || {stdio: 'inherit'});
+        } else {
+            throw new Error('config.app must have a path to the node app');
+        }
+    }
+    
+    child.on('close', function (code) {
+        console.error(code);
+        if (code === 8) {
+            console.log('Error detected, waiting for changes...');
+        }
+    });
+
+});*/
+
+
 
 
 

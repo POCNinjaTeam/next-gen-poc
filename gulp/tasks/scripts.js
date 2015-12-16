@@ -1,20 +1,22 @@
 'use strict';
 
-//import {path} from 'path';
-import {config as globalConfig, paths} from '../config';
-import {registerMultiTask} from '../utils/register-tasks';
 
+import gulp from 'gulp';
 import gutil from 'gulp-util';
+import babel from 'gulp-babel';
+import lazypipe from 'lazypipe';
+import concat from 'gulp-concat';
+import sourcemaps from 'gulp-sourcemaps';
+import gulpif from 'gulp-if';
+import watch from 'gulp-watch';
+
+//import {path} from 'path';
 import Q from 'q';
 
 
-var //path = require('path'),
-    gulp = require('gulp'),
+import {config as globalConfig, paths} from '../config';
+import {registerMultiTask} from '../utils/register-tasks';
 
-    babel = require('gulp-babel'),
-    lazypipe = require('lazypipe'),
-    concat = require('gulp-concat'),
-    sourcemaps = require('gulp-sourcemaps');
 
 
 
@@ -77,6 +79,7 @@ gulp.task('scripts', (task, done) => {
         .pipe(tasks.transpile())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(task.config.dest));
+        //.pipe(gulpif(task.config.watch, gulp.dest(task.config.dest)))
 });
 
 

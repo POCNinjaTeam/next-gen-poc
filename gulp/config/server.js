@@ -1,30 +1,36 @@
 'use strict';
 
+
 import {paths, config} from './index';
 //import expressApp from '../../tmp/src/server/app';
 
 
-export default base;
 
 const base = {
-    connect: {
+    server: {
         app: {
-            deps: ['scripts:app'],
+            //deps: ['scripts:app'],
             root: config.scripts.server.dest,
             livereload: true,
         },
         
 
         express: {
-            deps: ['scripts:server'],
+            //deps: ['watch:server'],
             livereload: true,
-            middleware: function(connect, opt) {
+            app: './tmp/src/server/app.js',
+            /*middleware: function(connect, opt) {
                 return [
                     // es6 'export default' causes require to bring
                     // and obj like `{default: exported_module}`
                     require('../../tmp/src/server/app').default
                 ];
             }
+            middleware: [
+                // es6 'export default' causes require to bring
+                // and obj like `{default: exported_module}`
+                require('../../tmp/src/server/app').default
+            ],*/
         },
         
         
@@ -36,11 +42,21 @@ const base = {
         e2e: {
             livereload: false,
         }*/
-    }
+    },
+    
+    /*'node-server': {
+        start: {
+            app: './tmp/src/server/app.js',
+        },
+        stop: {},
+        restart: {},
+    },*/
 };
 
-config.connect = base.connect;
+
+config.server = base.server;
+//config['node-server'] = base['node-server'];
 
 
-
+export default base.server;
 export const production = {};
