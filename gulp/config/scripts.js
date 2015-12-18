@@ -5,8 +5,6 @@ import merge from 'merge';
 import {paths, config} from './index';
 
 
-export default base;
-
 const base = {
     scripts: {
         app: {
@@ -34,4 +32,5 @@ config.scripts = base.scripts;
     
 
 
+export default base;
 export const production = {};

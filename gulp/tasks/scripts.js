@@ -8,99 +8,42 @@ import lazypipe from 'lazypipe';
 import concat from 'gulp-concat';
 import sourcemaps from 'gulp-sourcemaps';
 import gulpif from 'gulp-if';
-import watch from 'gulp-watch';
+import eslint from 'gulp-eslint';
+import plumber from 'gulp-plumber';
 
-//import {path} from 'path';
-import Q from 'q';
+import errorHandler from '../utils/error-handler';
 
-
-import {config as globalConfig, paths} from '../config';
-import {registerMultiTask} from '../utils/register-tasks';
 
 
 
 
 export var tasks = {
-    transpile: lazypipe()
-        .pipe(babel, {
-            presets: ['es2015']
-        }),
+    eslint: function(task) {
+        return lazypipe()
+            .pipe(eslint)
+            .pipe(eslint.format)    //, 'compact')
+    },
     
-    concat: lazypipe()
-        //.pipe()
+    transpile: function(task) {
+        return lazypipe()
+            .pipe(sourcemaps.init)
+            .pipe(babel, {
+                presets: ['es2015']
+            })
+            .pipe(sourcemaps.write, '.')
+    }
 };
-
-
-//gulp.task('transpile', registerTasks);
-
-
-/*gulp.task('transpile', () => {
-    // shape the array to have a promise for each target
-    // and resolve Q.all after every target's been resolved
-    return Q.all(Object.keys(globalConfig.scripts)
-        .filter((targetName) => {
-            let target = globalConfig.scripts[targetName];
-            return (target.src && target.src.length > 0);
-        })
-        .map((targetName) => {
-            let target = globalConfig.scripts[targetName],
-                deferred = Q.defer();
-            
-            setTimeout(function() {
-                gutil.log('Starting target', gutil.colors.cyan(targetName));
-
-                gulp.src(target.src, {cwd: target.cwd || null})
-                    .pipe(tasks.transpile())
-                    .pipe(sourcemaps.write('.'))
-                    .pipe(gulp.dest(paths.tmp))
-                    .on('finish', () => {
-                        gutil.log('Finished target', gutil.colors.cyan(targetName));
-                        deferred.resolve();
-                    });
-            }, 0);
-            
-            return deferred.promise;
-        }));
-});*/
-
-
-/*gulp.task('concat', ['transpile'], () => {
-    return gulp.src(globalConfig.scripts.src)
-        .pipe(tasks.concat())
-        .pipe(sourcemaps.write('.'));
-});*/
-
-
 
 
 gulp.task('scripts', (task, done) => {
     console.log('task.config.dest', task.config.dest);
     return gulp.src(task.config.src, {cwd: task.config.cwd})
-        .pipe(tasks.transpile())
-        .pipe(sourcemaps.write('.'))
+        .pipe(plumber(errorHandler(task.name)))
+        .pipe(tasks.eslint(task)())
+        .pipe(tasks.transpile(task)())
         .pipe(gulp.dest(task.config.dest));
         //.pipe(gulpif(task.config.watch, gulp.dest(task.config.dest)))
 });
-
-
-/*import Q from 'q';
-
-gulp.task('scripts', (task, done) => {
-    var deferred = Q.defer();
-
-    setTimeout(() => {
-
-        gulp.src(task.config.src)
-            .pipe(tasks.transpile())
-            .pipe(sourcemaps.write('.'))
-            .pipe(gulp.dest(paths.tmp));
-
-        deferred.resolve();
-    }, Math.floor(Math.random() * (5000 - 2000)) + 2000);
-
-    return deferred.promise; 
-});*/
-
 
 
 
