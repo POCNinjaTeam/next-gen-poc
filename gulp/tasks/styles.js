@@ -1,5 +1,52 @@
 'use strict';
 
+
+import gulp from 'gulp';
+import lazypipe from 'lazypipe';
+import sourcemaps from 'gulp-sourcemaps';
+import sass from 'gulp-sass';
+import plumber from 'gulp-plumber';
+import autoprefixer from 'gulp-autoprefixer';
+
+import errorHandler from '../utils/error-handler';
+
+
+
+
+
+export var tasks = {
+    styles: function(task) {
+        //console.log('task.name', task.name);
+        return lazypipe()
+            //.pipe($.inject(injectFiles, injectOptions))
+            //.pipe(wiredep(_.extend({}, conf.wiredep)))
+            .pipe(sourcemaps.init)
+            .pipe(sass, {
+                outputStyle: 'expanded',
+                sourceComments: true,
+                sourceMap: true,
+            })
+            .pipe(autoprefixer, {
+                browsers: ['last 2 versions', 'ie >= 9']
+            })
+            .pipe(sourcemaps.write, '.');
+    }
+};
+
+
+gulp.task('styles', (task) => {
+    //console.log('task.config.dest', task.config.dest);
+    return gulp.src(task.config.src, {cwd: task.config.cwd})
+        .pipe(plumber(errorHandler(task.name)))
+        .pipe(tasks.styles(task)())
+        .pipe(gulp.dest(task.config.dest))
+});
+
+
+
+
+
+/*
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('../config');
@@ -26,7 +73,7 @@ var buildStyles = function() {
   };
 
   var injectFiles = gulp.src([
-    path.join(conf.paths.src, '/app/**/*.scss'),
+    path.join(conf.paths.src, '/app/** /*.scss'),
     path.join('!' + conf.paths.src, '/app/index.scss')
   ], { read: false });
 
@@ -52,3 +99,5 @@ var buildStyles = function() {
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app/')));
 };
+*/
+

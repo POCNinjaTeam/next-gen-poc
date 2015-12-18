@@ -16,7 +16,6 @@ const base = {
                 'src/app/**/*.js',
             ],
             execute: [
-                //'watch-log',
                 'scripts',
                 'browser-reload'
             ],
@@ -31,11 +30,20 @@ const base = {
             ],
             execute: [
                 'scripts:server',
-                'watch-log',
                 'browser-reload'
             ],
             //command: 'node-debug',
         },
+        
+        styles: {
+            src: [
+                'src/**/*.scss',
+            ],
+            execute: [
+                'styles',
+                'browser-reload'
+            ],
+        }
 
 
         /*'unit-tests': {
