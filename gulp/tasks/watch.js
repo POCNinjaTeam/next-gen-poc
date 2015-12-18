@@ -4,6 +4,7 @@
 import path from 'path';
 
 import gulp from 'gulp';
+import gutil from 'gulp-util';
 import runSequence from 'run-sequence';
 import nodemon from 'gulp-nodemon';
 import browserSync from 'browser-sync';
@@ -37,9 +38,11 @@ export function staticWatch(config) {
     var watcher = gulp.watch(config.src, config.execute);
 
     watcher.on('change', function(event) {
-        console.log('on change');
         var shortPath = path.relative('./', event.path);
-        console.log('File ' + shortPath + ' was ' + event.type + ', running tasks...');
+        gutil.log('File ' + shortPath + ' was ' + event.type + ', running tasks...');
+        
+        // reload connected browsers after a slight delay
+        setTimeout(browserSync.reload, BROWSER_SYNC_RELOAD_DELAY, event.path);
     });
     
     return watcher;
@@ -47,20 +50,13 @@ export function staticWatch(config) {
 
 
 gulp.task('watch', (task, done) => {
-    switch (task.target.name) {
-        case 'app':
-            return staticWatch(task.config);
-            break;
-        case 'server':
-            nodeWatch(task.config, done);
-            break;
-        default:
-            break;
+    if (task.config.app) {
+        return nodeWatch(task.config, done);
     }
+    return staticWatch(task.config);    
 });
 
 
-gulp.task('watch-log', () => console.log('!LOG!'));
 
 
 /*
