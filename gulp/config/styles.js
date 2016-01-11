@@ -2,24 +2,30 @@
 
 import path from 'path';
 import merge from 'merge';
-import {paths, config} from './index';
+
+import {paths} from './index';
+import config from '../utils/config';
 
 
 const base = {
-    styles: {
-        app: {
-            cwd: paths.app,
-            src: [
-                '**/*.scss',
-            ],
-            dest: path.join(paths.tmp, paths.app),
-        },
-    }
+    app: {
+        cwd: paths.app,
+        src: [
+            '**/*.scss',
+        ],
+        dest: path.join(paths.tmp, paths.app),
+    },
 };
 
-config.styles = base.styles;
+//config.styles = base.styles;
+
+const production = {};
 
 
+// register all config envs
+config('styles', base);
+config('styles', production, 'production');
 
-export default base;
-export const production = {};
+
+const conf = config('styles');
+export default conf;

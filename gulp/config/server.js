@@ -1,25 +1,30 @@
 'use strict';
 
 
-import {paths, config} from './index';
+import path from 'path';
+
+import {paths} from './index';
+import config from '../utils/config';
+import scriptsConf from './scripts';
 //import expressApp from '../../tmp/src/server/app';
+
+//console.log('server scripts get', scriptsConf);
 
 
 
 const base = {
-    server: {
-        app: {
-            //deps: ['scripts:app'],
-            root: config.scripts.server.dest,
-            livereload: true,
-        },
-        
+    app: {
+        //deps: ['scripts:app'],
+        root: scriptsConf.server.dest,
+        livereload: true,
+    },
 
-        express: {
-            //deps: ['watch:server'],
-            livereload: true,
-            app: './tmp/src/server/app.js',
-            /*middleware: function(connect, opt) {
+
+    express: {
+        //deps: ['watch:server'],
+        livereload: true,
+        app: path.join(paths.tmp, 'server/app.js'),
+        /*middleware: function(connect, opt) {
                 return [
                     // es6 'export default' causes require to bring
                     // and obj like `{default: exported_module}`
@@ -31,10 +36,10 @@ const base = {
                 // and obj like `{default: exported_module}`
                 require('../../tmp/src/server/app').default
             ],*/
-        },
-        
-        
-        /*dev: {
+    },
+
+
+    /*dev: {
             deps: ['scripts'],
             livereload: true,
         },
@@ -42,21 +47,26 @@ const base = {
         e2e: {
             livereload: false,
         }*/
-    },
-    
-    /*'node-server': {
-        start: {
-            app: './tmp/src/server/app.js',
-        },
-        stop: {},
-        restart: {},
-    },*/
 };
 
+const production = {};
 
-config.server = base.server;
+    
+/*'node-server': {
+    start: {
+        app: './tmp/src/server/app.js',
+    },
+    stop: {},
+    restart: {},
+},*/
+
+
 //config['node-server'] = base['node-server'];
 
+config('server', base);
+config('server', production, 'production');
 
-export default base.server;
-export const production = {};
+
+const conf = config('server');
+export default conf;
+

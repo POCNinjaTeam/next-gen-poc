@@ -2,35 +2,39 @@
 
 import path from 'path';
 import merge from 'merge';
-import {paths, config} from './index';
+
+import {paths} from './index';
+import config from '../utils/config';
+
 
 
 const base = {
-    scripts: {
-        app: {
-            cwd: paths.app,
-            src: [
-                '**/*.js',
-                '!**/*.spec.js',
-                '!bower_components/**',
-                '!node_modules/**',
-            ],
-            dest: path.join(paths.tmp, paths.app),
-        },
+    app: {
+        cwd: paths.app,
+        src: [
+            '**/*.js',
+            '!**/*.spec.js',
+            '!bower_components/**',
+            '!node_modules/**',
+        ],
+    },
 
-        server: {
-            cwd: paths.server,
-            src: [
-                '**/*.js',
-            ],
-            dest: path.join(paths.tmp, paths.server),
-        }
+    server: {
+        cwd: paths.server,
+        src: [
+            '**/*.js',
+        ],
     }
 };
 
-config.scripts = base.scripts;
-    
+const production = {};
+
+// register all config envs
+config('scripts', base);
+config('scripts', production, 'production');
 
 
-export default base;
-export const production = {};
+const conf = config('scripts');
+console.log('conf', conf);
+
+export default conf;

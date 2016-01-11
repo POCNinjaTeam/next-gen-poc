@@ -5,7 +5,8 @@ import gulp from 'gulp';
 import path from 'path';
 import runSequence from 'run-sequence';
 
-import {config, paths} from '../config';
+import config from '../utils/config';
+import {paths} from '../config';
 
 
 
@@ -22,7 +23,7 @@ function multiTargetTask(taskTargetName, taskFunction) {
 export function registerAllTargets () {
     return Object.keys(gulp.tasks).forEach((key) => {
         var task = gulp.tasks[key],
-            taskConfig = config[task.name] || {};
+            taskConfig = config(task.name) || {};
 
         let targets = Object.keys(taskConfig)
             .map((target) => {
