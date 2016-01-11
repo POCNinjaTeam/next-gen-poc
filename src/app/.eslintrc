@@ -13,5 +13,8 @@
     "angular": true,
     "module": true,
     "inject": true
+  },
+  "settings": {
+    "angular": 2
   }
 }
