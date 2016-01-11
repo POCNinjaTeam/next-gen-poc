@@ -43,7 +43,7 @@ gulp.task('server', (task, done) => {
 gulp.task('browser-reload', () => browserSync.reload());
 
 
-gulp.task('serve', ['scripts', 'server:express', 'watch']);
+gulp.task('serve', ['scripts', 'server:express', 'watch', 'inject']);
 
 
 

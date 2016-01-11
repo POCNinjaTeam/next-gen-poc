@@ -1,8 +1,11 @@
 'use strict';
 
+
+import {paths} from '../config/index';
+
 var path = require('path');
 var gulp = require('gulp');
-var conf = require('../config');
+//var conf = require('../config');
 
 var $ = require('gulp-load-plugins')();
 
@@ -20,23 +23,29 @@ gulp.task('inject-reload', ['inject'], function() {
 
 
 gulp.task('inject', ['scripts', 'styles'], function () {
-  var injectStyles = gulp.src([
-    path.join(conf.paths.tmp, '/serve/app/**/*.css'),
-    path.join('!' + conf.paths.tmp, '/serve/app/vendor.css')
-  ], { read: false });
+    var injectStyles = gulp.src(['**/*.css', 'vendor.css'], {
+        read: false,
+        cwd: paths.app,
+        base: paths.base
+    });
 
-  var injectScripts = gulp.src([
-    path.join(conf.paths.tmp, '/serve/app/**/*.module.js')
-  ], { read: false });
+  var injectScripts = gulp.src(['**/*.module.js'], {
+    read: false,
+    cwd: paths.app,
+    base: paths.base
+  });
 
   var injectOptions = {
-    ignorePath: [conf.paths.src, path.join(conf.paths.tmp, '/serve')],
-    addRootSlash: false
+    ignorePath: ['app', path.join(paths.tmp)],
+    addRootSlash: true
   };
 
-  return gulp.src(path.join(conf.paths.src, '/*.html'))
+  return gulp.src('**/*.html', {
+      cwd: paths.app,
+      base: paths.base
+    })
     .pipe($.inject(injectStyles, injectOptions))
     .pipe($.inject(injectScripts, injectOptions))
-    .pipe(wiredep(_.extend({}, conf.wiredep)))
-    .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve')));
+    //.pipe(wiredep(_.extend({}, conf.wiredep)))
+    .pipe(gulp.dest(path.join(paths.tmp)));
 });

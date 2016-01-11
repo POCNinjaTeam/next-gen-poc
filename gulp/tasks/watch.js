@@ -18,7 +18,9 @@ var BROWSER_SYNC_RELOAD_DELAY = 500;
 export function nodeWatch(config, done) {
     return nodemon({
         // nodemon our expressjs server
-        script: config.app,
+        script: path.join(config.cwd || '', config.app),
+        stdout: console.log, //process.stdout,
+        //stdin: null,
         // watch core server file(s) that require server restart on change
         watch: config.src,
         tasks: config.execute || [],
@@ -52,8 +54,9 @@ export function staticWatch(config) {
 gulp.task('watch', (task, done) => {
     if (task.config.app) {
         return nodeWatch(task.config, done);
+    } else {
+        return staticWatch(task.config);    
     }
-    return staticWatch(task.config);    
 });
 
 

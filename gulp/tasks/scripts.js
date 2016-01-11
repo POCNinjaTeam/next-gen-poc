@@ -1,5 +1,6 @@
 'use strict';
 
+import Debug from 'debug';
 
 import gulp from 'gulp';
 import gutil from 'gulp-util';
@@ -11,8 +12,11 @@ import gulpif from 'gulp-if';
 import eslint from 'gulp-eslint';
 import plumber from 'gulp-plumber';
 
+import {paths} from '../config';
 import errorHandler from '../utils/error-handler';
 
+
+var debug = Debug('tasks:scripts');
 
 
 
@@ -36,13 +40,16 @@ export var tasks = {
 
 
 gulp.task('scripts', (task, done) => {
-    console.log('task.config.dest', task.config.dest);
-    return gulp.src(task.config.src, {cwd: task.config.cwd})
+    debug('task.config.dest', task.config.dest);
+    
+    return gulp.src(task.config.src, {
+            cwd: task.config.cwd || paths.tmp,
+            base: task.config.base || paths.base
+        })
         .pipe(plumber(errorHandler(task.name)))
         .pipe(tasks.eslint(task)())
         .pipe(tasks.transpile(task)())
-        .pipe(gulp.dest(task.config.dest));
-        //.pipe(gulpif(task.config.watch, gulp.dest(task.config.dest)))
+        .pipe(gulp.dest(task.config.dest || paths.tmp));
 });
 
 
