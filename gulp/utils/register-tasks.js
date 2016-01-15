@@ -4,6 +4,7 @@
 import gulp from 'gulp';
 import path from 'path';
 import runSequence from 'run-sequence';
+import Debug from 'debug';
 
 import config from '../utils/config';
 import {paths} from '../config';
@@ -22,11 +23,15 @@ function multiTargetTask(taskTargetName, taskFunction) {
 
 export function registerAllTargets () {
     return Object.keys(gulp.tasks).forEach((key) => {
-        var task = gulp.tasks[key],
+        var debug = Debug('register-tasks:'+ key),
+            task = gulp.tasks[key],
             taskConfig = config(task.name) || {};
 
         let targets = Object.keys(taskConfig)
+            .filter(target => target !=='defaults')
             .map((target) => {
+                debug('registering task', key, target);
+                
                 let taskTargetName = task.name +':'+ target,
                     targetConfig = taskConfig[target] || {};
 
