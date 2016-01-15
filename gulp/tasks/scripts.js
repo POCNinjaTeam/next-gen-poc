@@ -35,7 +35,9 @@ export var tasks = {
                 presets: ['es2015']
             })
             .pipe(sourcemaps.write, '.')
-    }
+    },
+    
+    
 };
 
 
@@ -43,13 +45,14 @@ gulp.task('scripts', (task, done) => {
     debug('task.config.dest', task.config.dest);
     
     return gulp.src(task.config.src, {
-            cwd: task.config.cwd || paths.tmp,
-            base: task.config.base || paths.base
+            cwd: task.config.cwd,
+            base: task.config.base,
+            read: task.config.read,
         })
         .pipe(plumber(errorHandler(task.name)))
-        .pipe(tasks.eslint(task)())
-        .pipe(tasks.transpile(task)())
-        .pipe(gulp.dest(task.config.dest || paths.tmp));
+        .pipe(gulpif(task.config.lint, tasks.eslint(task)()))
+        .pipe(gulpif(task.config.transpile, tasks.transpile(task)()))
+        .pipe(gulp.dest(task.config.dest));
 });
 
 
