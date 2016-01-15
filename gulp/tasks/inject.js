@@ -1,7 +1,13 @@
 'use strict';
 
 
+import wiredep from 'wiredep';
+
 import {paths} from '../config/index';
+
+
+
+
 
 var path = require('path');
 var gulp = require('gulp');
@@ -9,8 +15,7 @@ var gulp = require('gulp');
 
 var $ = require('gulp-load-plugins')();
 
-var wiredep = require('wiredep').stream;
-var _ = require('lodash');
+//var wiredep = require('wiredep').stream;
 
 var browserSync = require('browser-sync');
 
@@ -36,7 +41,7 @@ gulp.task('inject', ['scripts', 'styles'], function () {
   });
 
   var injectOptions = {
-    ignorePath: ['app', path.join(paths.tmp)],
+    ignorePath: ['app', paths.tmp, path.join(paths.tmp, 'app')],
     addRootSlash: true
   };
 
@@ -44,8 +49,12 @@ gulp.task('inject', ['scripts', 'styles'], function () {
       cwd: paths.app,
       base: paths.base
     })
-    .pipe($.inject(injectStyles, injectOptions))
-    .pipe($.inject(injectScripts, injectOptions))
-    //.pipe(wiredep(_.extend({}, conf.wiredep)))
+    //.pipe($.inject(injectStyles, injectOptions))
+    //.pipe($.inject(injectScripts, injectOptions))
+    .pipe(wiredep.stream({
+        ignorePath: '../..',
+        directory: 'bower_components',
+        cwd: './',
+    }))
     .pipe(gulp.dest(path.join(paths.tmp)));
 });
