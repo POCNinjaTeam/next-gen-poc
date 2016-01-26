@@ -33,7 +33,8 @@ gulp.task('server', (task, done) => {
     var browser = browserSync.create(task.name);
     
     browserSync.init({
-        proxy: 'localhost:8080'
+        https: true,
+        proxy: 'https://localhost:8443'
         
         //server: "./tmp/src/server",
         //files: ["*.html", "*.js"]
