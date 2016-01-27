@@ -3,19 +3,18 @@
 
 import path from 'path';
 
-import {paths} from './index';
-import config from '../utils/config';
-import scriptsConf from './scripts';
+import registerConfig from '../utils/config';
 //import expressApp from '../../tmp/src/server/app';
 
-//console.log('server scripts get', scriptsConf);
+import {paths} from './index';
+import scripts from './scripts';
 
 
 
-const base = {
+const base = registerConfig('server', {
     app: {
         //deps: ['scripts:app'],
-        root: scriptsConf.server.dest,
+        root: scripts.server.dest,
         livereload: true,
     },
 
@@ -47,9 +46,10 @@ const base = {
         e2e: {
             livereload: false,
         }*/
-};
+});
 
-const production = {};
+
+const production = registerConfig('server', {}, 'production');
 
     
 /*'node-server': {
@@ -63,10 +63,6 @@ const production = {};
 
 //config['node-server'] = base['node-server'];
 
-config('server', base);
-config('server', production, 'production');
 
-
-const conf = config('server');
-export default conf;
+export default registerConfig('server');
 

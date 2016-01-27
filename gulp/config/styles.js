@@ -3,11 +3,12 @@
 import path from 'path';
 import merge from 'merge';
 
+import registerConfig from '../utils/config';
+
 import {paths} from './index';
-import config from '../utils/config';
 
 
-const base = {
+const base = registerConfig('styles', {
     app: {
         cwd: paths.app,
         src: [
@@ -15,17 +16,12 @@ const base = {
         ],
         dest: path.join(paths.tmp, paths.app),
     },
-};
-
-//config.styles = base.styles;
-
-const production = {};
+});
 
 
-// register all config envs
-config('styles', base);
-config('styles', production, 'production');
+const production = registerConfig('styles', {}, 'production');
 
 
-const conf = config('styles');
-export default conf;
+
+
+export default registerConfig('styles');

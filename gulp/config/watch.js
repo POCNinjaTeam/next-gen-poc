@@ -1,14 +1,14 @@
 'use strict';
 
 
+import registerConfig from '../utils/config';
+
 import {paths} from './index';
-import config from '../utils/config';
-
-import serverConfig from './server';
-//import expressApp from '../../tmp/src/server/app';
+import server from './server';
 
 
-const base = {
+
+const base = registerConfig('watch', {
     app: {
         //dep: ['scripts'],
         src: [
@@ -22,7 +22,7 @@ const base = {
 
 
     server: {
-        app: config('server').express.app,
+        app: server.express.app,
         //dep: ['server:express'],
         src: [
             'src/server/**/*.js',
@@ -49,15 +49,12 @@ const base = {
             deps: ['scripts'],
             livereload: true,
         },*/
-};
-
-const production = {};
+});
 
 
-config('watch', base);
-config('watch', production, 'production');
+const production = registerConfig('watch', {}, 'production');
 
 
-const conf = config('watch');
-export default conf;
+
+export default registerConfig('watch');
 

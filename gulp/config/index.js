@@ -2,14 +2,18 @@
 
 
 import syncLoadModule from '../utils/sync-load-module';
-import config from '../utils/config';
+import registerConfig from '../utils/config';
 
 
+//import configScripts from './scripts';
+//console.log('configScripts', configScripts);
 
-//console.log('config', config);
+
+// FIXME: could still suffer from dependency hell when importing
+//        exported variables from other files...
 
 
-export const paths = {
+export const paths = registerConfig('paths', {
     /**
      *  The main paths of your project handle these with care
      */
@@ -19,11 +23,12 @@ export const paths = {
     dist: 'dist',
     tmp: 'tmp',
     e2e: 'e2e'
-};
+});
 
 
 // load all modules after all
 syncLoadModule(__filename);
+
 
 
 //var config = config

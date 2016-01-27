@@ -8,7 +8,7 @@ import Debug from 'debug';
 
 var configObj = {};
 
-export default function config(key, configOpts = {}, opts = {}, env) {
+export default function registerConfig(key, configOpts = {}, opts = {}, env) {
     let debug = Debug('config:'+ key);
     
     var nodeEnv = process.env.NODE_ENV,
@@ -37,6 +37,11 @@ export default function config(key, configOpts = {}, opts = {}, env) {
     debug('matchesEnv', matchesEnv(), key, nodeEnv, env);
     // env dependent code
     if (!matchesEnv()) {
+        // return the passed object when registering
+        if (key && Object.keys(configOpts).length > 0) {
+            return configOpts;
+        }
+        
         return null;
     }
     
@@ -66,8 +71,11 @@ export default function config(key, configOpts = {}, opts = {}, env) {
         // merge defaults over each target
         Object.keys(configOpts)
             .filter(target => target !== 'defaults')
-            .forEach(key => configOpts[key] = merge.recursive(true,
-                configOpts.defaults, configOpts[key]));
+            .forEach(key => {
+                configOpts[key] = configOpts.defaults ?
+                    merge.recursive(true, configOpts.defaults, configOpts[key]) :
+                    configOpts[key]
+            });
         
         // config('key', opts)
         if (configObj[key] && !opts.replace) {

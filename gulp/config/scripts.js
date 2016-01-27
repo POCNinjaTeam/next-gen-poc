@@ -4,26 +4,26 @@ import path from 'path';
 import merge from 'merge';
 import fs from 'fs';
 
+import registerConfig from '../utils/config';
+
 import {paths} from './index';
-import config from '../utils/config';
-//import * as bower_directory from process.cwd() +'/.bowerrc';
+//import server from './server';
 
 
 
 
-
-const base = {
+registerConfig('scripts', {
     defaults: {
         lint: true,
         transpile: true,
-        
+
         cwd: paths.app,
         base: paths.base,
         dest: paths.tmp,
         read: true,
     },
-    
-    
+
+
     app: {
         cwd: paths.app,
         src: [
@@ -33,15 +33,15 @@ const base = {
             '!node_modules/**',
         ],
     },
-    
+
     bower: {
         lint: false,
         transpile: false,
-        
+
         cwd: process.cwd(),
         base: process.cwd(),
         //read: false,
-        
+
         src: [
             'bower_components/**/*.js'
         ],
@@ -53,17 +53,13 @@ const base = {
         src: [
             '**/*.js',
         ],
+        
+//        test: server.express.livereload,
     }
-};
+});
 
-const production = {};
-
-// register all config envs
-config('scripts', base);
-config('scripts', production, 'production');
+registerConfig('scripts', {}, 'production');
 
 
-const conf = config('scripts');
-//console.log('conf', conf);
 
-export default conf;
+export default registerConfig('scripts');
