@@ -1,14 +1,13 @@
 /* global malarkey:false, moment:false */
 
-import {config} from './index.config';
-import {routerConfig, RouterController} from './index.route';
-import {runBlock} from './index.run';
-import {MainController} from './main/main.controller';
-import {GithubContributorService} from '../app/components/githubContributor/githubContributor.service';
-import {WebDevTecService} from '../app/components/webDevTec/webDevTec.service';
-import {NavbarDirective} from '../app/components/navbar/navbar.directive';
-import {MalarkeyDirective} from '../app/components/malarkey/malarkey.directive';
-
+import {config} from './index.config.js';
+import {routerConfig, RouterController} from './index.route.js';
+import {runBlock} from './index.run.js';
+import {MainController} from './main/main.controller.js';
+import {GithubContributorService} from './components/githubContributor/githubContributor.service.js';
+import {WebDevTecService} from './components/webDevTec/webDevTec.service.js';
+import {NavbarDirective} from './components/navbar/navbar.directive.js';
+import {MalarkeyDirective} from './components/malarkey/malarkey.directive.js';
 
 
 

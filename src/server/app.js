@@ -2,11 +2,13 @@
 
 
 import path from 'path';
+import fs from 'fs';
 
 import express from 'express';
 import swig from 'swig';
 import Debug from 'debug';
 import logger from 'morgan';
+import spdy from 'spdy';
 
 
 var app = express(),
@@ -37,14 +39,18 @@ app.get('/', function (req, res) {
     res.send('<html><body>Hello a World! <input></body></html>');
 });*/
 
+var serverOptions = {
+    key: fs.readFileSync(process.cwd() + '/keys/key.pem'),
+    cert: fs.readFileSync(process.cwd() + '/keys/cert.pem'),
+    //ca: fs.readFileSync(__dirname + '/keys/spdy-ca.pem')
+};
 
-var server = app.listen(8080, function () {
+var server = spdy.createServer(serverOptions, app).listen(8443, function() {
     var host = server.address().address;
     var port = server.address().port;
 
     console.log('Example app listening at http://%s:%s', host, port);
 });
-
 
 
 export default app;
