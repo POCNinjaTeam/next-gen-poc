@@ -36,7 +36,11 @@ export var tasks = {
 
 gulp.task('styles', (task) => {
     //console.log('task.config.dest', task.config.dest);
-    return gulp.src(task.config.src, {cwd: task.config.cwd})
+    return gulp.src(task.config.src, {
+            cwd: task.config.cwd,
+            base: task.config.base,
+            read: task.config.read,
+        })
         .pipe(plumber(errorHandler(task.name)))
         //.pipe(plumber(sass.logError))
         .pipe(tasks.styles(task)())

@@ -9,12 +9,20 @@ import {paths} from './index';
 
 
 const base = registerConfig('styles', {
+    defaults: {
+        cwd: paths.app,
+        base: paths.base,
+        dest: paths.tmp,
+        read: true,
+    },
+    
+    
     app: {
         cwd: paths.app,
         src: [
             '**/*.scss',
         ],
-        dest: path.join(paths.tmp, paths.app),
+//        dest: paths.app,
     },
 });
 

@@ -31,9 +31,7 @@ export var tasks = {
     transpile: function(task) {
         return lazypipe()
             .pipe(sourcemaps.init)
-            .pipe(babel, {
-                presets: ['es2015']
-            })
+            .pipe(babel)
             .pipe(sourcemaps.write, '.')
     },
     

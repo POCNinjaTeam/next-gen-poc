@@ -27,6 +27,7 @@ registerConfig('scripts', {
     app: {
         cwd: paths.app,
         src: [
+            '**/*.ts',
             '**/*.js',
             '!**/*.spec.js',
             '!bower_components/**',
@@ -53,8 +54,6 @@ registerConfig('scripts', {
         src: [
             '**/*.js',
         ],
-        
-//        test: server.express.livereload,
     }
 });
 
